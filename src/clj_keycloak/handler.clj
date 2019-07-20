@@ -1,6 +1,7 @@
 (ns clj-keycloak.handler
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
+            [clj-http.client :as http]
             [hiccup.core :refer [html]]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.oauth2 :refer [wrap-oauth2]]
@@ -9,11 +10,17 @@
 
 (def keycloak-endpoint "http://localhost:8080/auth/realms/master/protocol/openid-connect")
 
+(defn- user-info [token]
+  (:body (http/get (str keycloak-endpoint "/userinfo")
+                   {:oauth-token token
+                    :as          :json})))
+
 (defroutes app-routes
            (GET "/" req
-             (if-let [token (-> req :oauth2/access-tokens :keycloak)]
-               (do (prn (:expires token))
-                   (html [:a {:href "/logout"} "logout"]))
+             (if-let [{:keys [token expires refresh-token]} (-> req :oauth2/access-tokens :keycloak)]
+               (html [:div
+                      [:a {:href "/logout"} "logout"]
+                      [:div "hello " (:preferred_username (user-info token))]])
                (html [:a {:href "/oauth2/keycloak"} "login"])))
 
            (GET "/logout" []

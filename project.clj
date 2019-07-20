@@ -6,6 +6,7 @@
                  [compojure "1.6.1"]
                  [ring/ring-defaults "0.3.2"]
                  [ring-oauth2 "0.1.4"]
+                 [clj-http "3.10.0"]
                  [hiccup "1.0.5"]]
   :plugins [[lein-ring "0.12.5"]]
   :ring {:handler clj-keycloak.handler/app}

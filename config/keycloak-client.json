@@ -1,0 +1,11 @@
+{
+  "clientId": "clj-keycloak",
+  "enabled": true,
+  "rootUrl": "http://localhost:3000",
+  "redirectUris": [
+    "http://localhost:3000/*"
+  ],
+  "bearerOnly": false,
+  "publicClient": false,
+  "secret": "secret"
+}
